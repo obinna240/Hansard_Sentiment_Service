@@ -1,0 +1,13 @@
+Phase: OntoMatchings
+Input: Lookup
+Options: control = appelt
+Rule: PersonLookup
+(
+{Lookup.class == "http://www.w3.org/2002/07/owl#Thing", Lookup.inst != " "}
+):persooo
+-->
+:persooo.Mention =
+{text = :persooo@string}
+
+
+

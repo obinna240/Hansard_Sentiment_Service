@@ -1,0 +1,9 @@
+Phase:SubjectMatter
+Input: Sentence StronglySubjective
+Options: control = appelt
+Rule: subjectiveSentences
+ (
+ {Sentence contains StronglySubjective}
+ ):stronglySubjectiveSentences
+ -->
+ :stronglySubjectiveSentences.SubjectiveSentences = {ex="stronglySubjectiveSentences", text= :stronglySubjectiveSentences@string}

@@ -1,0 +1,70 @@
+Imports: 
+{ 
+import static gate.Utils.*; 
+import gate.corpora.DocumentContentImpl;
+}
+Phase:polarize
+Input: Token subjective
+Options: control = appelt
+Rule: TokenMarker
+(
+({Token})
+):entity
+-->
+{
+	AnnotationSet bindingSet = (AnnotationSet)bindings.get("entity");
+	if(bindingSet!=null)
+	{
+		
+		AnnotationSet polarityCover = inputAS.getCovering("subjective", start(bindingSet), end(bindingSet));
+		
+		Annotation pole = bindingSet.iterator().next();
+		
+		String category = (String)pole.getFeatures().get("category");
+		String cat = " ";
+		
+		if(category.equals("NNP")||category.equals("NN")||category.equals("NNPS")||category.equals("NNS")||category.equals("NP")||category.equals("NPS"))
+		{
+			cat = "noun";
+		}
+		else if(category.equals("VBD")||category.equals("VBG")||category.equals("VBN")||category.equals("VBP")||category.equals("VB")||category.equals("VBZ"))
+		{
+			cat = "verb";
+		}
+		else if(category.equals("JJ")||category.equals("JJR")||category.equals("JJS")||category.equals("JJSS"))
+		{
+			cat = "adjective";
+		}
+		
+		
+		String priorpolarity = "neutral";
+		FeatureMap fMap = Factory.newFeatureMap();
+		if (polarityCover != null)
+		{
+			for(Annotation annotation:polarityCover)
+			{
+				String annFeatures = (String)annotation.getFeatures().get("POS");
+				if(annFeatures.equals(cat))
+				{
+					 priorpolarity = (String)annotation.getFeatures().get("priorpolarity");
+					 break;
+				}
+				else
+				{
+					priorpolarity = (String)annotation.getFeatures().get("priorpolarity");
+				}
+			}
+			
+			pole.getFeatures().put("priorpolarity",priorpolarity);
+		}
+		else
+		{
+			pole.getFeatures().put("priorpolarity",priorpolarity);
+		}
+		
+	}
+}
+
+
+
+

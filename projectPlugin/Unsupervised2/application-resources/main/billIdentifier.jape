@@ -1,0 +1,93 @@
+Phase:BillIdentifier
+Input: Token NounChunk Organisation Location
+Options: control = appelt
+
+MACRO: BILL
+(
+ (({Token.string==~"[Ss]ection"}|{Token.string==~"[Ss]ubsection"}|{Token.string==~"[Ss]ubsections"}|{Token.string==~"[Ss]ections"})
+ ({Token.kind == punctuation, Token.string == "("}{Token.kind == number}{Token.kind == punctuation, Token.string == ")"})
+ ({Token.kind == punctuation, Token.string == "("}{Token.kind == word}{Token.kind == punctuation, Token.string == ")"})*)
+ |
+ (
+ ({Token.string==~"[Pp]aragraph"}|{Token.string==~"[Pp]aragraph"}|{Token.string==~"[Pp]aragraphs"})
+ ({Token.kind == punctuation, Token.string == "("}{Token.kind == word}{Token.kind == punctuation, Token.string == ")"}))
+ |
+ ({Token.string ==~ "[Cc]lause"}({Token.kind == number}|{Token.kind == word, Token.length == 1}))
+ |
+ ({Token.string ==~ "[Aa]mendment"}(({Token.kind == punctuation, Token.string == "("}{Token.kind == word}{Token.kind == punctuation, Token.string == ")"})|({Token.kind == number})))
+ |
+ ({Token.string ==~ "[Aa]rticle"}{Token.kind == number})
+ )
+
+MACRO: TCHUNK
+(({NounChunk}):noun{Token.category==IN}({NounChunk}|{Organisation}|{Location})?)
+
+Rule: BillIntensifier
+Priority:8
+ (
+ (({Token.string==~"[Ss]ection"}|{Token.string==~"[Ss]ubsection"}|{Token.string==~"[Ss]ubsections"}|{Token.string==~"[Ss]ections"})
+ ({Token.kind == punctuation, Token.string == "("}{Token.kind == number}{Token.kind == punctuation, Token.string == ")"})
+ ({Token.kind == punctuation, Token.string == "("}{Token.kind == word}{Token.kind == punctuation, Token.string == ")"})*)
+ |
+ (
+ ({Token.string==~"[Pp]aragraph"}|{Token.string==~"[Pp]aragraph"}|{Token.string==~"[Pp]aragraphs"})
+ ({Token.kind == punctuation, Token.string == "("}{Token.kind == word}{Token.kind == punctuation, Token.string == ")"}))
+ |
+ ({Token.string ==~ "[Cc]lause"}({Token.kind == number}|{Token.kind == word, Token.length == 1}))
+ |
+ ({Token.string ==~ "[Aa]mendment"}(({Token.kind == punctuation, Token.string == "("}{Token.kind == word}{Token.kind == punctuation, Token.string == ")"})|({Token.kind == number})))
+ |
+ ({Token.string ==~ "[Aa]rticle"}{Token.kind == number})
+ ):bills
+ -->
+ :bills.BillMention = {bill="law", text= :bills@string, POS="NP"}
+
+Rule: BillIntensifier2
+Priority:10
+ (
+ (BILL){Token.string=="of"}({NounChunk}):noun
+ ):bills
+ -->
+ :bills.BillMention = {bill="law", text= :bills@string, POS="NP", billDocument = :noun@string},
+ {
+	AnnotationSet annots = bindings.get("bills");
+	AnnotationSet annotSet = annots.get("noun");
+	System.out.println(annotSet);
+	if(!annotSet.isEmpty()){
+	String nounString = "";
+	try 
+	{
+		nounString = doc.getContent().getContent(annotSet.firstNode().getOffset(),annotSet.lastNode().getOffset()).toString();
+	}
+	catch(InvalidOffsetException e)
+	{
+	}
+	FeatureMap fMap  = Factory.newFeatureMap();
+	fMap.put("billDocumentName", nounString);
+	outputAS.add(annots.firstNode(), annots.lastNode(), "BillMention",fMap);	}
+ }
+ 
+Rule: BillIntensifier3
+Priority:11
+ (
+ (BILL){Token.string=="of"}(TCHUNK)[1,2]
+ ):bills
+ -->
+ :bills.BillMention = {bill="law", text= :bills@string, POS="NP", billDocument = :noun@string},
+ {
+	AnnotationSet annots = bindings.get("bills");
+	AnnotationSet annotSet = annots.get("noun");
+	System.out.println(annotSet);
+	if(!annotSet.isEmpty()){
+	String nounString = "";
+	try 
+	{
+		nounString = doc.getContent().getContent(annotSet.firstNode().getOffset(),annotSet.lastNode().getOffset()).toString();
+	}
+	catch(InvalidOffsetException e)
+	{
+	}
+	FeatureMap fMap  = Factory.newFeatureMap();
+	fMap.put("billDocumentName", nounString);
+	outputAS.add(annots.firstNode(), annots.lastNode(), "BillMention",fMap);	}
+ }

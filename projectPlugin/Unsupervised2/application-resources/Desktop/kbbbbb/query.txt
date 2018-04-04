@@ -1,0 +1,12 @@
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX foaf:<http://xmlns.com/foaf/0.1/>
+PREFIX  saparl:<http://ktp.systemassociates.co.uk/ParliamentOntology.owl#>
+PREFIX owl:<http://www.w3.org/2002/07/owl#>
+PREFIX  xs:<http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?personName ?object
+where 
+{
+?object a saparl:Person . 
+?object foaf:givenName ?personName .
+}

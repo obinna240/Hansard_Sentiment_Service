@@ -1,0 +1,9 @@
+Phase:intensityTracker
+Input: Token VG 
+Options: control = appelt
+ Rule: VerbIntensifier
+ (
+ ({Token.category=="RBR"}|{Token.category=="RB"}|{Token.category=="RS"})+{VG}
+ ):verbIntensifier
+ -->
+ :verbIntensifier.intensifier = {intensifierType="verb", text = :verbIntensifier@string}

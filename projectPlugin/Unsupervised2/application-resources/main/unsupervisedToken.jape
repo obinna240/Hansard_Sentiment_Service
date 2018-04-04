@@ -1,0 +1,75 @@
+Imports: 
+{ 
+import static gate.Utils.*; 
+import gate.corpora.DocumentContentImpl;
+}
+Phase:polarize
+Input: newToken 
+Options: control = appelt
+Rule: TokenMarker
+(
+	{newToken}
+):entity
+-->
+{	
+	AnnotationSet bindingSet = (AnnotationSet)bindings.get("entity");
+	
+	AnnotationSet covering = inputAS.get(start(bindingSet), end(bindingSet));
+	
+	
+	
+	Set<String> coveredAnnots = covering.getAllTypes();
+	
+	//System.out.println(coveredAnnots);
+	
+	//Set<String> containedSet = new HashSet<String>();
+	
+	ArrayList<String> containedSet = new ArrayList<String>();
+	
+	//containedSet.add("Person");containedSet.add("AnotherPerson");containedSet.add("Aperson");containedSet.add("BillMention");
+	//containedSet.add("Constituency");containedSet.add("Date");containedSet.add("FirstPerson");containedSet.add("JobTitle");
+	//containedSet.add("Location");containedSet.add("Mention");containedSet.add("Money");containedSet.add("Organization");
+	//containedSet.add("ParliamentPosition");containedSet.add("Salutation");containedSet.add("pers");containedSet.add("Title");
+	
+	containedSet.add("Person");containedSet.add("AnotherPerson");containedSet.add("Aperson");containedSet.add("BillMention");
+	containedSet.add("Constituency");containedSet.add("Date");containedSet.add("FirstPerson");containedSet.add("JobTitle");
+	containedSet.add("Location");containedSet.add("Mention");containedSet.add("Money");containedSet.add("Organization");
+	containedSet.add("ParliamentPosition");containedSet.add("Salutation");containedSet.add("pers");containedSet.add("Title");containedSet.add("Unknown");
+	
+	if(coveredAnnots!=null && !coveredAnnots.isEmpty())
+	{
+		int i = 0;
+		for(String str:containedSet)
+		{
+			if(coveredAnnots.contains(str))
+			{
+				i = 1;
+				break;
+			}
+		}
+		if (i == 0)
+		{
+			Annotation ann = bindingSet.iterator().next();
+			FeatureMap fMap = ann.getFeatures();
+			outputAS.add(bindingSet.firstNode(), bindingSet.lastNode(), "sentimentToken", fMap);
+		}
+	}
+	
+	/**
+	if(coveredAnnots!=null && !coveredAnnots.isEmpty())
+	{
+		if(containedSet.containsAll(coveredAnnots))
+		{
+			System.out.println("yes");
+			Annotation ann = bindingSet.iterator().next();
+			FeatureMap fMap = ann.getFeatures();
+			outputAS.add(bindingSet.firstNode(), bindingSet.lastNode(), "sentimentToken", fMap);
+		}
+		else
+		{
+			System.out.println("no");
+		}
+	}*/
+	
+	
+}

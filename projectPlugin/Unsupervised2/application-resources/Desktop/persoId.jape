@@ -1,0 +1,17 @@
+Phase: Finishing
+Input: Lookup Token Person Title Location Party
+Options: control = appelt
+Rule: PersonLookup
+(
+({Token.category == NNP, Token.orth == upperInitial, Token.kind == word, !Title, !Location, !Party})[2]
+):persoId
+-->
+:persoId.AnotherPerson ={text = :persoId@string, size = :persoId@length, gender = :persoId.Person.gender}
+
+Rule: PersonLookups
+(
+{Person, !Party}
+):persoId
+-->
+:persoId.Aperson = {text = :persoId@string, size = :persoId@length, gender = :persoId.Person.gender}
+

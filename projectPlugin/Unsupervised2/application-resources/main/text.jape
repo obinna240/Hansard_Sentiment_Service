@@ -1,0 +1,9 @@
+Phase:EntireDoc
+Input:Token
+Options: control = appelt
+Rule: pair
+(
+({Token})+
+):entity
+-->
+:entity.Text = {kind = "fullText"}

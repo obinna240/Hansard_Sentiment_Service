@@ -1,0 +1,11 @@
+Phase:PartyOfSpeaker
+Input: Party Token
+Options: control = appelt
+Rule: PartyGetter
+ ({Token.string == "("})
+ (
+ {Party}
+ ):speakerParty
+ ({Token.string == ")"})
+ -->
+ :speakerParty.partyOfSpeaker = {partyName = :speakerParty.Party.Full_Party_Name}

@@ -1,0 +1,42 @@
+Imports: 
+{ 
+import static gate.Utils.*; 
+import gate.corpora.DocumentContentImpl;
+}
+Phase:AddressConverter
+Input:Address
+Options: control = appelt
+Rule: pair
+({Address}):entity
+-->
+{
+AnnotationSet bindingSet = (AnnotationSet)bindings.get("entity");
+if(bindingSet!=null)
+	{
+	try 
+	{
+		AnnotationSet anSet = inputAS.get("Address");
+		List<Annotation> anList = inDocumentOrder(anSet);
+		int size = anList.size();
+		
+		String dTy = "Address";
+		String finalString = "nn"+dTy+"nn";
+		DocumentContentImpl impl = new DocumentContentImpl(finalString);
+		
+		for(int i=size-1;i>=0;i--)
+		{
+			Annotation ann = anList.get(i);
+			Long fNode = ann.getStartNode().getOffset();
+			Long lNode = ann.getEndNode().getOffset();
+			doc.edit(fNode, lNode, impl);
+			//FeatureMap features = Factory.newFeatureMap();
+			//features.put("entityType", dTy);
+			//outputAS.add(fNode, lNode, "Entity", features);
+		}
+	}
+	catch(InvalidOffsetException e)
+	{
+		e.printStackTrace();
+	}	
+	}
+}

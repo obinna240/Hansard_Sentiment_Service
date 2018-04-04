@@ -1,0 +1,16 @@
+Phase:PartyOfSpeaker
+Input: Party Person Lookup
+Options: control = appelt
+Rule: PartyGetter
+ (
+ {Person, !Party}
+ ):per
+ -->
+ :per.pers = {},
+ {
+ AnnotationSet aSet = bindings.get("per");
+ for(Annotation e : aSet) 
+ {
+	System.out.println(e.getType());
+ }
+ }

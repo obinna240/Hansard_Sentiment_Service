@@ -1,0 +1,30 @@
+Phase:WeaklySubjectMatter
+Input: Sentence WeaklySubjective SentenceInQuestion
+Options: control = appelt
+Rule: weaklySubjectiveSentences
+ (
+ {!SentenceInQuestion, Sentence contains !WeaklySubjective, Sentence contains !StronglySubjective}
+ ):weaklySubjectiveSentences
+ -->
+ :weaklySubjectiveSentences.ObjectiveSentences = {ex="ObjectiveSentence", text= :weaklySubjectiveSentences@string},
+ {
+ AnnotationSet aSet = bindings.get("weaklySubjectiveSentences");
+  for(Annotation e : aSet)
+	{
+		System.out.println("Found "+e.getType()+" "+e.getFeatures());
+	}
+ }
+ 
+ Rule: weaklySubjectiveSentences2
+ (
+ {!SentenceInQuestion, Sentence contains WeaklySubjective, Sentence contains !StronglySubjective }
+ ):weaklySubjectiveSentences
+ -->
+ :weaklySubjectiveSentences.ObjectiveSentence = {ex="ObjectiveSentence", text= :weaklySubjectiveSentences@string},
+ {
+ AnnotationSet aSet = bindings.get("weaklySubjectiveSentences");
+ for(Annotation e : aSet)
+	{
+		System.out.println("Found "+e.getType()+" "+e.getFeatures());
+	}
+ }

@@ -1,0 +1,9 @@
+Phase:Preprocess
+Input: Token
+Options: control = appelt
+Rule: Question
+(
+{Token.string == "?"}
+):tag
+-->
+:tag.Question = {rule = "Question"}

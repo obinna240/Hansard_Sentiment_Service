@@ -1,0 +1,31 @@
+Phase:adverbTracker
+Input: Token 
+Options: control = appelt
+
+Rule: TokensAdverb
+(
+{Token.category=="RBR"}|{Token.category=="RB"}|{Token.category=="RBS"}
+):adverb
+-->
+ :adverb.Adverb = {POS="adverb", text = :adverb@string}
+
+Rule: TokensAdjective
+(
+{Token.category=="JJ"}|{Token.category=="JJSS"}
+):adjective
+-->
+ :adjective.Adjective = {POS="normal", text = :adjective@string}
+
+Rule: TokensAdjectiver
+(
+{Token.category=="JJR"}
+):adjectiver
+-->
+ :adjectiver.Adjective-comp = {POS="comparative", text = :adjectiver@string}
+ 
+ Rule: TokensAdjectivest
+(
+{Token.category=="JJS"}
+):adjectivest
+-->
+ :adjectivest.Adjective-super = {POS="superlative", text = :adjectivest@string}

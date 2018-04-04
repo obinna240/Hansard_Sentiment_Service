@@ -1,0 +1,11 @@
+Phase:negativeSentimentPhrase
+Input: Negations Token PositiveWords Positrons NegativeWords
+Options: control = appelt
+Rule: negativeSensitivity
+ (
+ ({Negations})+({PositiveWords}|{Token.category==VB})|
+  (({Positrons})+({Token.category == PRP}|{Token.category==TO})?{NegativeWords}):negPositronPhrase
+ ):negSentPhrase
+ -->
+ :negPositronPhrase.NegativePhrase = {text = :negPositronPhrase@string, rule = NPT},
+ :negSentPhrase.NegativePhrase = {text = :negSentPhrase@string, rule = PTTN}

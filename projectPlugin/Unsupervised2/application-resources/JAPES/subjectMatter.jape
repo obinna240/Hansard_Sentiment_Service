@@ -1,0 +1,9 @@
+Phase:SubjectMatter
+Input: Sentence NounChunk
+Options: control = appelt
+Rule: NounIntensifier
+ (
+ {NounChunk within Sentence}
+ ):nounIntensifierss
+ -->
+ :nounIntensifierss.sentenceSubject = {clause="subject", text= :nounIntensifierss@string}

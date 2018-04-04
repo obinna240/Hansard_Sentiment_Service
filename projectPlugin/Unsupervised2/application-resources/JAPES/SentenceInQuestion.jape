@@ -1,0 +1,9 @@
+Phase:Preprocess
+Input: Sentence Question
+Options: control = appelt
+Rule: QuestionAnnot
+(
+{Sentence contains Question}
+):sentenceInQuestion
+-->
+:sentenceInQuestion.SentenceInQuestion = {rule = "SentenceInQuestion", text = :sentenceInQuestion@string}

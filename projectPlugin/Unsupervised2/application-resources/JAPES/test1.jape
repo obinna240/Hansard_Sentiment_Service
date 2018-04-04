@@ -1,0 +1,54 @@
+Imports: { import static gate.Utils.*; }
+Phase:Test
+Input: Person Organization Location
+Options: control = appelt
+Rule: ListEntities
+ ({Person}|{Organization}|{Location}):ent
+-->
+ {
+ AnnotationSet annSet = bindings.get("ent");
+ 
+ //get the only annotation from the set
+ Annotation entityAnn = annSet.iterator().next();
+ 
+ AnnotationSet tokenAS = inputAS.get("Token", entityAnn.getStartNode().getOffset(), entityAnn.getEndNode().getOffset());
+ List<Annotation> tokens = new ArrayList<Annotation>(tokenAS);
+ 
+ //IF NO TOKENS TO MATCH
+ if(tokens.isEmpty())
+	return;
+	
+Collections.sort(tokens, new gate.util.OffsetComparator());
+
+Annotation curToken = null;
+
+for (int i=0;i<tokens.size();i++)
+{
+curToken = tokens.get(i);
+String ruleInfo = (String) entityAnn.getFeatures().get("rule1");
+String NMRuleInfo = (String) entityAnn.getFeatures().get("NMRule");
+if ( ruleInfo != null) {
+curToken.getFeatures().put("rule_NE_kind", entityAnn.getType());
+curToken.getFeatures().put("NE_rule_id", ruleInfo);
+}
+else if (NMRuleInfo != null) {
+curToken.getFeatures().put("rule_NE_kind", entityAnn.getType());
+curToken.getFeatures().put("NE_rule_id", "orthomatcher");
+}
+else {
+curToken.getFeatures().put("rule_NE_kind", "None");
+curToken.getFeatures().put("NE_rule_id", "None");
+}
+List matchesList = (List) entityAnn.getFeatures().get("matches");
+if (matchesList != null) {
+if (matchesList.size() == 2)
+curToken.getFeatures().put("coref_chain_length", "2");
+else if (matchesList.size() > 2 && matchesList.size() < 5)
+curToken.getFeatures().put("coref_chain_length", "3-4");
+else
+curToken.getFeatures().put("coref_chain_length", "5-more");
+}
+else
+curToken.getFeatures().put("coref_chain_length", "0");
+}//for
+}

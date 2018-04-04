@@ -1,0 +1,47 @@
+Imports: 
+{ 
+import static gate.Utils.*; 
+import gate.corpora.DocumentContentImpl;
+}
+Phase:polarize
+Input: Token Lookup
+Options: control = appelt
+Rule: TokenMarker
+(
+	({Token.kind=="word"}):posToken
+	|
+	({Lookup.majorType == "negation"})
+	({Token.kind=="word"}):regToken
+):entity
+-->
+:regToken.negativeToken = {text = :regToken@string, length = :regToken@length, categor = :regToken.Token.category, orth = :regToken.Token.orth},
+:posToken.positiveToken = {text = :posToken@string, length = :posToken@length, categor = :posToken.Token.category, orth = :posToken.Token.orth},
+{
+	
+	AnnotationSet posSet = (AnnotationSet)bindings.get("posToken");
+	AnnotationSet negSet = (AnnotationSet)bindings.get("regToken");
+	
+	if(posSet!=null)
+	{
+		
+		AnnotationSet polarityCover = inputAS.getCovering("Token", start(posSet), end(posSet));
+		Annotation ann = polarityCover.iterator().next();
+		
+		FeatureMap fMap = ann.getFeatures();
+				
+		fMap.put("type","posToken");
+		outputAS.add(posSet.firstNode(), posSet.lastNode(), "newToken", fMap);
+						
+	}
+	
+	if(negSet!=null)
+	{
+		AnnotationSet polarityCover = inputAS.getCovering("Token", start(negSet), end(negSet));
+		Annotation ann = polarityCover.iterator().next();
+		
+		FeatureMap fMap = ann.getFeatures();
+				
+		fMap.put("type","negToken");
+		outputAS.add(negSet.firstNode(), negSet.lastNode(), "newToken", fMap);
+	}
+}

@@ -1,0 +1,13 @@
+subjectivityClues.lst:subjectiveWord:::subjective
+subjectiveIdioms.lst:subjectiveIdiom:::idiom
+negation.lst:negation
+party_short.lst:party:shortForm:British:Party
+party_fullName.lst:party:fullName:British:Party
+avoid.lst:Ignore:::Ignore
+parliamentaryPositions.lst:ParlPos:::ParliamentPosition
+salutation.lst:personSalutation:::Salutation
+elections.lst:event:::Event
+constituency.lst:constituency:::Constituency
+auxilliaryVerbs.lst:auxVerb:::Auxilliary
+importantPhrases.lst:importantPhrase:::importantPhrase
+importantWords.lst:importantWord:::importantWord

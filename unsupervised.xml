@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:gate="http://gate.ac.uk/ns/spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+			http://gate.ac.uk/ns/spring
+			http://gate.ac.uk/ns/spring.xsd">
+
+	<!--  gate:init gate-home="C:\Users\obinnao2\Desktop\Sentiment_Mining_Datasets\PolarityTestSet\Analysis\Unsupervised\Unsupervised2" plugins-home="C:\Users\obinnao2\Desktop\Sentiment_Mining_Datasets\PolarityTestSet\Analysis\Unsupervised\Unsupervised2\plugins" user-config-file="C:\Users\obinnao2\Desktop\Sentiment_Mining_Datasets\PolarityTestSet\Analysis\Unsupervised\Unsupervised2\gate.xml" /-->
+	<gate:init gate-home="classpath:projectPlugin\Unsupervised2" plugins-home="classpath:projectPlugin\Unsupervised2\plugins" user-config-file="classpath:projectPlugin\Unsupervised2\gate.xml" />
+	
+	<gate:duplicate id="dupApp" return-template="true">
+		<!--gate:saved-application location="C:\Users\obinnao2\Desktop\Sentiment_Mining_Datasets\PolarityTestSet\Analysis\Unsupervised\Unsupervised2\application.xgapp" /-->
+		<gate:saved-application location="classpath:projectPlugin\Unsupervised2\application.xgapp" />
+	</gate:duplicate>
+	
+	<bean id="processor" class="gate.util.LanguageAnalyserDocumentProcessor" destroy-method="cleanup">
+		<property name="analyser" ref="dupApp" />
+		<gate:pooled-proxy max-size="10" />
+	</bean>
+	
+</beans>
+
+
